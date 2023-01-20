@@ -15,19 +15,18 @@ spec:
   template:
     metadata:
       labels:
-        app: web
-        octopusexport: OctopusExport
+        app: ispyagentdvr
     spec:
       volumes:
         - name: pvc-agent-config
           persistentVolumeClaim:
-            claimName: agent-config
+            claimName: ispyagentdvr-config
         - name: pvc-agent-media
           persistentVolumeClaim:
-            claimName: agent-media
+            claimName: ispyagentdvr-media
         - name: pvc-agent-commands
           persistentVolumeClaim:
-            claimName: agent-commands
+            claimName: ispyagentdvr-commands
       containers:
         - name: ispyagentdvr
           image: 'doitandbedone/ispyagentdvr:latest'
@@ -41,12 +40,12 @@ spec:
             - name: http
               containerPort: 8090
           volumeMounts:
-            - name: agent-commands
+            - name: pvc-agent-commands
               mountPath: /agent/Commands/
               subPath: ''
-            - name: agent-media
+            - name: pvc-agent-media
               mountPath: /agent/Media/WebServerRoot/Media/
               subPath: ''
-            - name: agent-config
+            - name: pvc-agent-config
               mountPath: /agent/Media/XML/
               subPath: ''

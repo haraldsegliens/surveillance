@@ -34,6 +34,7 @@
         - clean is defined
         - clean | bool
     - name: Delete k8s surveillance namespace
+      become: yes
       kubernetes.core.k8s:
         name: surveillance
         api_version: v1
@@ -44,6 +45,7 @@
         - clean is defined
         - clean | bool
     - name: Create k8s surveillance namespace
+      become: yes
       kubernetes.core.k8s:
         name: surveillance
         api_version: v1
@@ -59,6 +61,7 @@
       loop_control:
         label: "{{ item }}"
     - name: Apply kubernetes patch yaml
+      become: yes
       kubernetes.core.k8s_json_patch:
         kind: DaemonSet
         namespace: ingress

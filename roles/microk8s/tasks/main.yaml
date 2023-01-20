@@ -20,6 +20,7 @@
 - name: Configure kube config for current user
   become: yes
   shell: |
+    cd ~/
     mkdir -p .kube
     cd .kube
     microk8s config > config

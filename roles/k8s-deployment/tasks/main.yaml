@@ -1,5 +1,6 @@
 ---
 - name: Apply k8s configmaps
+  become: yes
   kubernetes.core.k8s:
     state: present
     wait: true
@@ -11,6 +12,7 @@
   loop_control:
     loop_var: item2
 - name: Apply k8s yaml
+  become: yes
   kubernetes.core.k8s:
     state: present
     apply: true
