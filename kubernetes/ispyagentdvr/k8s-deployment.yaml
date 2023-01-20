@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ispyagentdvr
+  namespace: surveillance
+  labels:
+    app: ispyagentdvr
+spec:
+  selector:
+    matchLabels:
+      app: ispyagentdvr
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: web
+        octopusexport: OctopusExport
+    spec:
+      volumes:
+        - name: pvc-agent-config
+          persistentVolumeClaim:
+            claimName: agent-config
+        - name: pvc-agent-media
+          persistentVolumeClaim:
+            claimName: agent-media
+        - name: pvc-agent-commands
+          persistentVolumeClaim:
+            claimName: agent-commands
+      containers:
+        - name: ispyagentdvr
+          image: 'doitandbedone/ispyagentdvr:latest'
+          ports:
+            - name: webrtc0
+              containerPort: 50000
+              protocol: UDP
+            - name: turn
+              containerPort: 3478
+              protocol: UDP
+            - name: http
+              containerPort: 8090
+          volumeMounts:
+            - name: agent-commands
+              mountPath: /agent/Commands/
+              subPath: ''
+            - name: agent-media
+              mountPath: /agent/Media/WebServerRoot/Media/
+              subPath: ''
+            - name: agent-config
+              mountPath: /agent/Media/XML/
+              subPath: ''

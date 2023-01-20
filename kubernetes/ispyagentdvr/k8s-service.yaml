@@ -1,0 +1,12 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ispyagentdvr
+  namespace: surveillance
+spec:
+  selector:
+    app: ispyagentdvr
+  ports:
+    - name: http
+      port: 8090

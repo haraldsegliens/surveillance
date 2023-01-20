@@ -1,0 +1,27 @@
+---
+- name: Install snap
+  become: yes
+  apt:
+    name: snapd
+    state: present
+    update_cache: yes
+- name: Install microk8s
+  become: yes
+  command: snap install microk8s --classic
+  register: command_output2
+- debug:
+    var: command_output2.stdout_lines
+- name: Configure microk8s
+  become: yes
+  command: microk8s enable ingress dns hostpath-storage
+  register: command_output3
+- debug:
+    var: command_output3.stdout_lines
+- name: Configure kube config for current user
+  become: yes
+  shell: |
+    mkdir -p .kube
+    cd .kube
+    microk8s config > config
+    chown {{ ansible_user_id }} config
+    chmod 600 config

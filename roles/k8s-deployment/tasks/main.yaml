@@ -1,0 +1,24 @@
+---
+- name: Apply k8s configmaps
+  kubernetes.core.k8s:
+    state: present
+    wait: true
+    template: "{{ item2.src }}"
+  with_filetree: "{{ deployment_directory }}"
+  when:
+   - item2.state == 'file'
+   - ((item2.src | basename).startswith('k8s-config') or (item2.src | basename).startswith(env + "k8s-config"))
+  loop_control:
+    loop_var: item2
+- name: Apply k8s yaml
+  kubernetes.core.k8s:
+    state: present
+    apply: true
+    template: "{{ item2.src }}"
+  with_filetree: "{{ deployment_directory }}"
+  when:
+   - item2.state == 'file'
+   - ((item2.src | basename).startswith('k8s-') or item2.src.startswith(env + "k8s-"))
+   - not ((item2.src | basename).startswith('k8s-config') or (item2.src | basename).startswith(env + "k8s-config"))
+  loop_control:
+    loop_var: item2
